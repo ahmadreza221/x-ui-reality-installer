@@ -7,7 +7,7 @@ services:
     container_name: x-ui-panel
     restart: unless-stopped
     ports:
-      - "54321:54321"
+      - "11854:11854"
     volumes:
       - ./x-ui-data:/usr/local/x-ui
       - ./ssl-certs:/etc/letsencrypt

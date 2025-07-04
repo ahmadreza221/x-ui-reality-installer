@@ -179,7 +179,7 @@ ADMIN_USERNAME=$ADMIN_USERNAME
 ADMIN_PASSWORD=$ADMIN_PASSWORD
 REALITY_SERVER_NAME=www.google.com
 REALITY_DEST=www.google.com:443
-XUI_PORT=54321
+XUI_PORT=11854
 NGINX_HTTP_PORT=80
 NGINX_HTTPS_PORT=443
 EOF
@@ -290,7 +290,7 @@ cat > /root/vpn-info.txt << EOF
 🖥️  Server IPv6: $IPV6_ADDRESS
 
 🔐 3x-ui Panel Access:
-   URL: https://$DOMAIN
+   URL: https://$DOMAIN/admin/
    Username: $ADMIN_USERNAME
    Password: $ADMIN_PASSWORD
 
@@ -341,7 +341,7 @@ EOF
 # Display final information
 print_header "🎉 Docker-based Installation Complete!"
 echo ""
-print_status "3x-ui Panel URL: https://$DOMAIN"
+print_status "3x-ui Panel URL: https://$DOMAIN/admin/"
 print_status "Admin Username: $ADMIN_USERNAME"
 print_status "Admin Password: $ADMIN_PASSWORD"
 echo ""
@@ -355,6 +355,6 @@ print_status "Configuration saved to: /root/vpn-info.txt"
 print_status "Docker project directory: /opt/vpn-server"
 echo ""
 print_warning "Please wait 2-3 minutes for all services to fully initialize"
-print_warning "Then access the panel at: https://$DOMAIN"
+print_warning "Then access the panel at: https://$DOMAIN/admin/"
 echo ""
 print_status "Docker-based installation completed successfully! 🚀" 
