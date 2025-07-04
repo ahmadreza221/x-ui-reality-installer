@@ -48,8 +48,20 @@ generate_uuid() {
 
 # Function to generate X25519 key pair
 generate_x25519_keys() {
-    local private_key=$(openssl genpkey -algorithm x25519 -outform PEM | base64 -w 0)
-    local public_key=$(echo "$private_key" | openssl pkey -pubout -outform PEM | base64 -w 0)
+    # Generate private key in PEM
+    openssl genpkey -algorithm X25519 -out reality_private.pem
+    # Extract raw private key (base64, 32 bytes)
+    openssl pkey -in reality_private.pem -outform DER | tail -c 32 | base64 > reality_private.key
+    # Extract public key (base64, 32 bytes)
+    openssl pkey -in reality_private.pem -pubout -outform DER | tail -c 32 | base64 > reality_public.key
+    local private_key=$(cat reality_private.key)
+    local public_key=$(cat reality_public.key)
+    # Clean up
+    rm -f reality_private.pem reality_private.key reality_public.key
+    if [[ -z "$private_key" || -z "$public_key" ]]; then
+        print_error "Reality key generation failed. Please check openssl installation."
+        exit 1
+    fi
     echo "$private_key:$public_key"
 }
 
