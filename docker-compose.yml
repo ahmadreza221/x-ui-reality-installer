@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # 3x-ui Panel
+  x-ui:
+    image: ghcr.io/mhsanaei/3x-ui:latest
+    container_name: x-ui-panel
+    restart: unless-stopped
+    ports:
+      - "54321:54321"
+    volumes:
+      - ./x-ui-data:/usr/local/x-ui
+      - ./ssl-certs:/etc/letsencrypt
+    environment:
+      - XRAY_CONFIG_PATH=/usr/local/x-ui/config.json
+    networks:
+      - vpn-network
+    depends_on:
+      - nginx
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: vpn-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl-certs:/etc/letsencrypt:ro
+      - ./nginx-logs:/var/log/nginx
+    networks:
+      - vpn-network
+    depends_on:
+      - certbot
+
+  # Certbot for SSL certificates
+  certbot:
+    image: certbot/certbot
+    container_name: vpn-certbot
+    volumes:
+      - ./ssl-certs:/etc/letsencrypt
+      - ./certbot-webroot:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d ${DOMAIN}
+    networks:
+      - vpn-network
+
+  # Certbot renewal service
+  certbot-renew:
+    image: certbot/certbot
+    container_name: vpn-certbot-renew
+    volumes:
+      - ./ssl-certs:/etc/letsencrypt
+      - ./certbot-webroot:/var/www/certbot
+    command: renew
+    networks:
+      - vpn-network
+    profiles:
+      - renewal
+
+networks:
+  vpn-network:
+    driver: bridge
+
+volumes:
+  x-ui-data:
+  ssl-certs:
+  nginx-logs:
+  certbot-webroot: 
