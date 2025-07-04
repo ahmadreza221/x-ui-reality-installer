@@ -148,11 +148,10 @@ ufw --force reset
 ufw default deny incoming
 ufw default allow outgoing
 
-# Allow SSH, HTTP, HTTPS, and 3x-ui panel
+# Allow SSH, HTTPS, and 3x-ui panel
 ufw allow 22/tcp
-ufw allow 80/tcp
 ufw allow 443/tcp
-ufw allow 54321/tcp
+ufw allow 20000/tcp
 
 # Enable IPv6 in UFW
 sed -i 's/IPV6=no/IPV6=yes/' /etc/default/ufw
@@ -179,8 +178,7 @@ ADMIN_USERNAME=$ADMIN_USERNAME
 ADMIN_PASSWORD=$ADMIN_PASSWORD
 REALITY_SERVER_NAME=www.google.com
 REALITY_DEST=www.google.com:443
-XUI_PORT=11854
-NGINX_HTTP_PORT=80
+XUI_PORT=20000
 NGINX_HTTPS_PORT=443
 EOF
 
